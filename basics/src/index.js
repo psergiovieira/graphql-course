@@ -3,11 +3,15 @@ import { GraphQLServer } from "graphql-yoga";
 //type definitions
 const typeDefs = `
     type Query {
+        me: Person!        
+    }
+
+    type Person {
         id: ID!
         name: String!
         age: Int!
         employed: Boolean!
-        gpa: Float
+        gpa: Float  
         address: Address!
     }
 
@@ -22,29 +26,22 @@ const typeDefs = `
 //resolver
 const resolvers = {
     Query: {
-         id(){
-             return 'iuaskas,da1235';
-         },
-         name(){
-             return 'Paulo';
-         },
-         age(){
-             return 30;
-         },
-         employed(){
-             return true;
-         },
-         gpa(){
-            return 10.920;
-         },
-         address(){
+         me(){
              return {
-                 id: '1a2s1a5',
-                 street: 'Fluorina',
-                 number: 1660,
-                 neighbor: 'Paraiso',                 
-             }
-         }
+               id: 'a123sa',
+               name: 'Paulo',
+               age: 30,
+               employed: true,
+               gpa: 12.80,    
+               address: {
+                
+                    id: '1a2s1a5',
+                    street: 'Fluorina',
+                    number: 1660,
+                    neighbor: 'Paraiso',                 
+                          
+             }}
+         },         
     }
 }
 
