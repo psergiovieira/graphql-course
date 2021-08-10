@@ -5,6 +5,8 @@ const typeDefs = `
     type Query {
         me: Person!    
         greeting(name: String): String!    
+        grades: [Int]!
+        sum(numbers: [Float!]!): Float!
     }
 
     type Person {
@@ -33,6 +35,15 @@ const resolvers = {
                 return `Hello ${args.name}!`
              }
              return `Hello!`
+         },
+         sum(parent, args, ctx, info){
+            console.log()
+             return args.numbers.reduce((accumulator, currentValue)=>{
+                return accumulator + currentValue;
+             });
+         },
+         grades() {
+             return [6,9,10]
          },
          me(){
              return {
