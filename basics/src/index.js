@@ -75,6 +75,8 @@ const typeDefs = `
 
     type Mutation{
         createUser(name: String!, email: String!, age: Int): User!
+        createPost(title: String!, body: String!, published: Boolean!, author: ID!): Post!
+        createComment(text: String!, author: ID!, post: ID!): Comment!
     }
 
     type User {
@@ -107,6 +109,20 @@ const findUsers = (author)=>{
         return user.id === author;
      });
 }
+
+const verifyUser = (userId)=>{
+    const usersExists = users.some((user) => user.id === userId);
+    if (!usersExists) {
+      throw new Error("User not found");
+    }
+} 
+
+const verifyIfPostExists = (postId)=>{
+    const postExists = posts.some((post) => post.id === postId);
+    if (!postExists) {
+      throw new Error("Post not found");
+    }
+} 
 
 //resolver
 const resolvers = {
@@ -159,6 +175,32 @@ const resolvers = {
 
             users.push(userToBeAdded);
             return userToBeAdded;            
+        },
+        createPost(parent, args, ctx, info){
+            verifyUser(args.author);
+
+            const newPost = {
+                id: uuidv4(),
+                title: args.title,
+                body: args.body,
+                published: args.published,
+                author: args.author
+            }
+
+            posts.push(newPost);
+            return newPost;
+        },
+        createComment(parent, args, ctx, info){
+            verifyUser(args.author);
+            verifyIfPostExists(args.post);
+            const newComment = {
+                id: uuidv4(),
+                text: args.text,
+                author: args.author,
+                post: args.post
+            }
+            comments.push(newComment);
+           return newComment;
         }
     },
     Post: {
