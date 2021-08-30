@@ -74,9 +74,28 @@ const typeDefs = `
     }
 
     type Mutation{
-        createUser(name: String!, email: String!, age: Int): User!
-        createPost(title: String!, body: String!, published: Boolean!, author: ID!): Post!
-        createComment(text: String!, author: ID!, post: ID!): Comment!
+        createUser(data: CreateUserInput!): User!
+        createPost(data: CreatePostInput!): Post!
+        createComment(data: CreateComment): Comment!
+    }
+
+    input CreateUserInput {
+        name: String!
+        email: String!
+        age: Int
+    }
+
+    input CreatePostInput {
+        title: String!
+        body: String!
+        published: Boolean!
+        author: ID!
+    }
+
+    input CreateComment {
+        text: String!
+        author: ID!
+        post: ID!
     }
 
     type User {
@@ -169,29 +188,29 @@ const resolvers = {
         createUser(parent, args, ctx, info){
             const userToBeAdded = {
                 id: uuidv4(),
-                ...args
+                ...args.data
             };
 
             users.push(userToBeAdded);
             return userToBeAdded;            
         },
         createPost(parent, args, ctx, info){
-            verifyUser(args.author);
+            verifyUser(args.data.author);
 
             const newPost = {
                 id: uuidv4(),
-                ...args
+                ...args.data
             }
 
             posts.push(newPost);
             return newPost;
         },
         createComment(parent, args, ctx, info){
-            verifyUser(args.author);
-            verifyIfPostExists(args.post);
+            verifyUser(args.data.author);
+            verifyIfPostExists(args.data.post);
             const newComment = {
                 id: uuidv4(),
-                ...args
+                ...args.data
             }
             comments.push(newComment);
            return newComment;
